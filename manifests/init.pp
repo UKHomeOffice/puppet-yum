@@ -271,7 +271,7 @@ class yum (
   if $yum::source_repo_dir == undef {
     if versioncmp($puppetversion, '3.4') > 0 or versioncmp($puppetversion, '3.4') > 1 { 
       contain $yum::defaults
-    else 
+    } else  {
       include $yum::defaults
     }
   }
