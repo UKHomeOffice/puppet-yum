@@ -102,18 +102,6 @@
 #   Use this when the service is managed by a tool like a cluster software
 #   Can be defined also by the (top scope) variable $yum_disableboot
 #
-# [*puppi*]
-#   Set to 'true' to enable creation of module data files that are used by puppi
-#   Can be defined also by the (top scope) variables $yum_puppi and $puppi
-#
-# [*puppi_helper*]
-#   Specify the helper to use for puppi commands. The default for this module
-#   is specified in params.pp and is generally a good choice.
-#   You can customize the output of puppi commands for this module using another
-#   puppi helper. Use the define puppi::helper to create a new custom helper
-#   Can be defined also by the (top scope) variables $yum_puppi_helper
-#   and $puppi_helper
-#
 # [*debug*]
 #   Set to 'true' to enable modules debugging
 #   Can be defined also by the (top scope) variables $yum_debug and $debug
@@ -176,8 +164,6 @@ class yum (
   $absent              = params_lookup( 'absent' ),
   $disable             = params_lookup( 'disable' ),
   $disableboot         = params_lookup( 'disableboot' ),
-  $puppi               = params_lookup( 'puppi' , 'global' ),
-  $puppi_helper        = params_lookup( 'puppi_helper' , 'global' ),
   $debug               = params_lookup( 'debug' , 'global' ),
   $audit_only          = params_lookup( 'audit_only' , 'global' ),
   $config_dir          = params_lookup( 'config_dir' ),
@@ -200,7 +186,6 @@ class yum (
   $bool_absent=any2bool($absent)
   $bool_disable=any2bool($disable)
   $bool_disableboot=any2bool($disableboot)
-  $bool_puppi=any2bool($puppi)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
   $bool_priorities_plugin=any2bool($priorities_plugin)
@@ -307,22 +292,6 @@ class yum (
   ### Manage Automatic Updates
   if $yum::manage_updates {
     include $yum::update
-  }
-
-  ### Include custom class if $my_class is set
-  if $yum::my_class {
-    include $yum::my_class
-  }
-
-
-  ### Provide puppi data, if enabled ( puppi => true )
-  if $yum::bool_puppi == true {
-    $classvars=get_class_args()
-    puppi::ze { 'yum':
-      ensure    => $yum::manage_file,
-      variables => $classvars,
-      helper    => $yum::puppi_helper,
-    }
   }
 
   ### Debugging, if enabled ( debug => true )
