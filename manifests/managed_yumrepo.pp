@@ -16,6 +16,7 @@ define yum::managed_yumrepo (
   $autokeyimport   = 'no',
   $includepkgs     = 'absent',
   $metadata_expire = 'absent',
+  $http_caching    = 'all',
   $include         = 'absent'
   ) {
 
@@ -68,6 +69,7 @@ define yum::managed_yumrepo (
     exclude          => $exclude,
     includepkgs      => $includepkgs,
     metadata_expire  => $metadata_expire,
+    http_caching     => $http_caching,
     include          => $include
   }
 
